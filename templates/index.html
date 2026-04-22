@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='modern.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
+    <title>Birthdays</title>
+</head>
+
+<body>
+    <div class="page-bg"></div>
+    <header class="site-header">
+        <div class="shell header-inner">
+            <div>
+                <p class="eyebrow">Family Calendar</p>
+                <h1>Birthdays</h1>
+            </div>
+            <div class="header-actions">
+                <p class="header-note">Never miss a special date.</p>
+                <div class="theme-switch" title="Toggle dark and light mode">
+                    <span class="theme-label">Light</span>
+                    <label class="switch">
+                        <input id="theme-toggle" type="checkbox" aria-label="Toggle dark mode">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="theme-label">Dark</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="shell main-grid">
+        <!-- Add Birthday -->
+        <section class="panel reveal">
+            <h2>Add a Birthday</h2>
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% endif %}
+            <form action="/" method="post" class="stack-form">
+                <div class="field-group">
+                    <label for="new-name">Name</label>
+                    <input id="new-name" type="text" autofocus autocomplete="off" name="name" placeholder="Enter name" required>
+                </div>
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="new-month">Month</label>
+                        <input id="new-month" type="number" autocomplete="off" name="month" placeholder="MM" min="1" max="12" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="new-day">Day</label>
+                        <input id="new-day" type="number" autocomplete="off" name="day" placeholder="DD" min="1" max="31" required>
+                    </div>
+                </div>
+                <p class="hint">Day range follows month (example: April max 30, February max 29).</p>
+                <button type="submit" class="btn btn-primary">Add Birthday</button>
+            </form>
+        </section>
+
+        <!-- Birthday List -->
+        <section class="panel reveal delay-1">
+            <div class="table-header">
+                <h2>All Birthdays</h2>
+                <span class="pill">{{ rows | length }} saved</span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Birthday</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                            <tr>
+                                <td>{{ row.name }}</td>
+                                <td>{{ row.month }}/{{ row.day }}</td>
+                                <td class="action-cell">
+                                    <a href="/?edit_id={{ row.id }}" class="btn btn-small">Edit</a>
+                                    <form action="/delete" method="post" class="inline-form">
+                                        <input type="hidden" name="id" value="{{ row.id }}">
+                                        <button type="submit" class="btn btn-small btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Edit Modal -->
+    {% if edit_row %}
+        <div class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+            <div class="modal-card">
+                <div class="modal-head">
+                    <h3 id="edit-modal-title">Edit Birthday</h3>
+                    <a href="/" class="modal-close" aria-label="Close">x</a>
+                </div>
+                <form action="/update" method="post" class="edit-form">
+                    <input type="hidden" name="id" value="{{ edit_row.id }}">
+                    <div class="field-group">
+                        <label for="edit-name-modal">Name</label>
+                        <input id="edit-name-modal" type="text" name="name" value="{{ edit_row.name }}" placeholder="Name" required>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="edit-month-modal">Month</label>
+                            <input id="edit-month-modal" type="number" name="month" min="1" max="12" value="{{ edit_row.month }}" required>
+                        </div>
+                        <div class="field-group">
+                            <label for="edit-day-modal">Day</label>
+                            <input id="edit-day-modal" type="number" name="day" min="1" max="31" value="{{ edit_row.day }}" required>
+                        </div>
+                    </div>
+                    <p class="hint">Day range follows month.</p>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="/" class="btn btn-muted">Cancel</a>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    <footer class="site-footer">
+        <div class="shell footer-inner">
+            <p>Birthdays Tracker</p>
+            <a class="linkedin-link" href="https://www.linkedin.com/in/rathodbhagyesh/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile: rathodbhagyesh">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M4.98 3.5C4.98 4.88 3.88 6 2.47 6S0 4.88 0 3.5 1.09 1 2.47 1s2.51 1.12 2.51 2.5ZM.22 8.25h4.5V23h-4.5V8.25Zm7.36 0h4.31v2.02h.06c.6-1.13 2.1-2.32 4.31-2.32 4.61 0 5.46 3.03 5.46 6.97V23h-4.5v-6.74c0-1.61-.03-3.69-2.25-3.69-2.26 0-2.61 1.76-2.61 3.57V23h-4.5V8.25Z"/>
+                </svg>
+                <span class="sr-only">LinkedIn</span>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        const THEME_STORAGE_KEY = "birthdays-theme";
+        const themeToggle = document.getElementById("theme-toggle");
+        const monthDayLimits = JSON.parse('{{ month_day_limits | tojson | safe }}');
+
+        function getInitialTheme() {
+            const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            return storedTheme || (prefersDark ? "dark" : "light");
+        }
+
+        function applyTheme(theme) {
+            document.body.dataset.theme = theme;
+            localStorage.setItem(THEME_STORAGE_KEY, theme);
+        }
+
+        function initializeThemeToggle() {
+            const initialTheme = getInitialTheme();
+            applyTheme(initialTheme);
+
+            if (!themeToggle) {
+                return;
+            }
+
+            themeToggle.checked = initialTheme === "dark";
+            themeToggle.addEventListener("change", () => {
+                applyTheme(themeToggle.checked ? "dark" : "light");
+            });
+        }
+
+        function bindMonthDayLimit(monthId, dayId) {
+            const monthInput = document.getElementById(monthId);
+            const dayInput = document.getElementById(dayId);
+
+            if (!monthInput || !dayInput) {
+                return;
+            }
+
+            const syncDayMax = () => {
+                const month = Number(monthInput.value);
+                const maxDay = monthDayLimits[month] || 31;
+                dayInput.max = String(maxDay);
+
+                const currentDay = Number(dayInput.value);
+                if (currentDay > maxDay) {
+                    dayInput.value = String(maxDay);
+                }
+            };
+
+            monthInput.addEventListener("input", syncDayMax);
+            monthInput.addEventListener("change", syncDayMax);
+            syncDayMax();
+        }
+
+        initializeThemeToggle();
+        bindMonthDayLimit("new-month", "new-day");
+        bindMonthDayLimit("edit-month-modal", "edit-day-modal");
+    </script>
+</body>
+
+</html>
