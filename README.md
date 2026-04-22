@@ -23,7 +23,7 @@ birthdays is intended to be a lightweight, easy-to-read project that demonstrate
 ## Tech stack
 
 - HTML 
-- CSS  
+- Tailwindcss  
 - Python 
 
 Common libraries you might find useful when extending this project:
