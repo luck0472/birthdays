@@ -2,9 +2,7 @@
 
 A lightweight birthday tracker built with **Python + Flask** and **SQLite**, with a clean, responsive UI using **HTML/CSS** (Tailwind styles). Add birthdays, view the full list, and update entries with simple server-side validation.
 
-## Live Demo
-
-- https://birthdays-il22.onrender.com/
+## [ Live Demo ] (https://birthdays-il22.onrender.com)
 
 ## Features
 
